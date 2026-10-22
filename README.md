@@ -1,3 +1,3 @@
 # NOGOA-SCHOOLS
 
-***Belongs to HRH chief Godwin Ngbede Onah***
+***Proprietor HRH chief DR. Godwin Ngbede Onah***

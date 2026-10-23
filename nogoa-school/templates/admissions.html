@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Admissions{% endblock %}
+{% block content %}
+    <h1>How to Apply</h1>
+    {% for step in steps %}
+        <h3>{{ loop.index }}. {{ step.title }}</h3>
+        <p>{{ step.desc }}</p>
+    {% endfor %}
+{% endblock %}

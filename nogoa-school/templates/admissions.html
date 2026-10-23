@@ -1,9 +1,7 @@
 {% extends "base.html" %}
 {% block title %}Admissions{% endblock %}
 {% block content %}
-    <h1>How to Apply</h1>
-    {% for step in steps %}
-        <h3>{{ loop.index }}. {{ step.title }}</h3>
-        <p>{{ step.desc }}</p>
-    {% endfor %}
+<section class="page"><h1>How to apply</h1>
+<ol class="steps">{% for t, d in steps %}<li><strong>{{ t }}</strong><span>{{ d }}</span></li>{% endfor %}</ol>
+<a class="btn" href="{{ url_for('apply') }}">Start application</a></section>
 {% endblock %}

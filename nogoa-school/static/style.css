@@ -1,0 +1,32 @@
+:root{--brown:#7a3e12;--gold:#d4a017;--ink:#2a1a10;--paper:#fffdf9;--line:#e8dccb}
+*{box-sizing:border-box}
+body{margin:0;font-family:Poppins,sans-serif;color:var(--ink);background:var(--paper);line-height:1.6}
+h1,h3,.logo{font-family:Fraunces,serif}
+a{color:var(--brown)}
+header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;padding:16px 6vw;border-bottom:1px solid var(--line)}
+.logo{font-size:1.5rem;font-weight:800;text-decoration:none}
+nav{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+nav a{text-decoration:none;font-weight:500}
+.btn{display:inline-block;background:var(--brown);color:#fff;border:2px solid var(--brown);padding:10px 20px;border-radius:999px;font:500 1rem Poppins,sans-serif;cursor:pointer;text-decoration:none}
+.btn.ghost{background:transparent;color:var(--brown)}
+.btn.small{padding:4px 14px;font-size:.85rem}
+.btn:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.hero{padding:12vh 6vw;background:linear-gradient(135deg,#2c3e50,var(--brown));color:#fff}
+.hero h1{font-size:clamp(2.2rem,6vw,4rem);max-width:14em;margin:0 0 .4em;line-height:1.1}
+.hero p{max-width:34em;font-size:1.1rem}
+.hero .btn{background:var(--gold);border-color:var(--gold);color:var(--ink);margin-right:10px}
+.hero .btn.ghost{background:transparent;color:#fff;border-color:#fff}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:24px;padding:48px 6vw}
+.card{border-left:4px solid var(--gold);padding:8px 20px}
+.page{padding:48px 6vw;max-width:900px;margin:auto}
+.page.wide{max-width:1200px}.page.narrow{max-width:480px}
+form label{display:block;margin-bottom:16px;font-weight:500}
+input,select{display:block;width:100%;margin-top:6px;padding:10px;border:1px solid var(--line);border-radius:8px;font:inherit}
+td input,td select{margin:0}
+.steps{padding-left:1.2em}.steps li{margin-bottom:14px}.steps span{display:block;color:#6b5a4c}
+table{width:100%;border-collapse:collapse;margin-top:24px;overflow-x:auto;display:block}
+th,td{padding:10px 12px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+.tag{padding:2px 12px;border-radius:999px;background:#eee;font-size:.85rem}
+.tag.accepted{background:#d8f0dc}.tag.rejected{background:#f6d6d6}.tag.under-review{background:#fbeccb}
+.flash{background:#fbeccb;padding:12px 6vw;border-bottom:1px solid var(--gold)}
+footer{padding:24px 6vw;border-top:1px solid var(--line);color:#6b5a4c;font-size:.9rem}

@@ -1,13 +1,22 @@
 <!DOCTYPE html>
-<html>
-<head>
-    <title>{% block title %}School{% endblock %}</title>
-</head>
-<body>
-    <nav>
-        <a href="/">Home</a>
-        <a href="/admissions">Admissions</a>
-    </nav>
-    {% block content %}{% endblock %}
-</body>
-</html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{% block title %}{{ school }}{% endblock %}</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;800&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head><body>
+<header><a class="logo" href="{{ url_for('home') }}">{{ school }}</a>
+<nav>
+<a href="{{ url_for('home') }}">Home</a>
+<a href="{{ url_for('about') }}">About</a>
+<a href="{{ url_for('admissions') }}">Admissions</a>
+{% if role == 'admin' %}<a href="{{ url_for('admin') }}">Admin</a>
+{% elif role %}<a href="{{ url_for('dashboard') }}">Dashboard</a>{% endif %}
+{% if role %}<a class="btn ghost" href="{{ url_for('logout') }}">Log out</a>
+{% else %}<a href="{{ url_for('login') }}">Log in</a>
+<a class="btn" href="{{ url_for('register') }}">Enrol now</a>{% endif %}
+</nav></header>
+{% with msgs = get_flashed_messages() %}{% for m in msgs %}<div class="flash">{{ m }}</div>{% endfor %}{% endwith %}
+<main>{% block content %}{% endblock %}</main>
+<footer>&copy; {{ school }}. All rights reserved.</footer>
+</body></html>

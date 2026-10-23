@@ -1,5 +1,14 @@
 {% extends "base.html" %}
-{% block title %}Home{% endblock %}
 {% block content %}
-    <h1>Welcome to {{ school_name }}</h1>
+<section class="hero">
+<h1>Where every child is known by name.</h1>
+<p>{{ school }} offers nursery, primary and secondary education, with admissions handled fully online.</p>
+<a class="btn" href="{{ url_for('admissions') }}">Start admission</a>
+<a class="btn ghost" href="{{ url_for('about') }}">About the school</a>
+</section>
+<section class="grid">
+<div class="card"><h3>Nursery</h3><p>Play-led learning for the youngest pupils.</p></div>
+<div class="card"><h3>Primary</h3><p>Strong foundations in literacy, numeracy and character.</p></div>
+<div class="card"><h3>Secondary</h3><p>Exam preparation and guidance for the next step.</p></div>
+</section>
 {% endblock %}

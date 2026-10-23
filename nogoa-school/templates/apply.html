@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Apply{% endblock %}
+{% block content %}
+<section class="page narrow"><h1>Admission application</h1>
+<form method="post" enctype="multipart/form-data">
+<label>Child's full name<input name="child" required></label>
+<label>Date of birth<input type="date" name="dob" required></label>
+<label>Class applying for
+<select name="grade"><option>Nursery</option><option>Primary</option><option>Secondary</option></select></label>
+<label>Birth certificate or passport photo (PDF, PNG, JPG, max 5 MB)<input type="file" name="doc"></label>
+<button class="btn">Submit application</button></form></section>
+{% endblock %}

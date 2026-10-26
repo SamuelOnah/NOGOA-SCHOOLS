@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Site settings{% endblock %}
+{% block content %}
+<section class="page"><h1>Site settings</h1>
+<form method="post" enctype="multipart/form-data">
+<h2>Words on the site</h2>
+<label>Full school name (titles, About page, footer)<input name="school_name" value="{{ s.school_name }}" required></label>
+<label>Short name (top-left of every page)<input name="short_name" value="{{ s.short_name }}" required></label>
+<label>Home page headline<input name="headline" value="{{ s.headline }}"></label>
+<label>Home page introduction<textarea name="intro" rows="3">{{ s.intro }}</textarea></label>
+<label>About page text (blank lines make new paragraphs)<textarea name="about" rows="8">{{ s.about }}</textarea></label>
+<label>Admission fee<input name="admission_fee" value="{{ s.admission_fee }}"></label>
+<label>Contact line (address, phone, email)<input name="contact" value="{{ s.contact }}"></label>
+<h2>Images</h2>
+<label>Home page background picture (wide landscape photo, max 5 MB)<input type="file" name="hero" accept="image/*"></label>
+{% if s.hero %}<label class="check"><input type="checkbox" name="remove_hero"> Remove current background picture</label>{% endif %}
+<label>School logo (square PNG works best)<input type="file" name="logo" accept="image/*"></label>
+{% if s.logo %}<label class="check"><input type="checkbox" name="remove_logo"> Remove current logo</label>{% endif %}
+<p>Photos of the proprietor, headmistress, staff and gallery are added on the <a href="{{ url_for('admin_content') }}">content page</a>.</p>
+<h2>Admin password</h2>
+<label>New password (leave empty to keep the current one)<input type="password" name="new_password" minlength="6" autocomplete="new-password"></label>
+<button class="btn">Save everything</button></form></section>
+{% endblock %}

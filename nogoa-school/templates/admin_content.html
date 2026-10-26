@@ -3,6 +3,8 @@
 {% block title %}Manage content{% endblock %}
 {% block content %}
 <section class="page wide"><h1>Manage site content</h1>
+<div class="card"><strong>Where do images go?</strong>
+<p>Upload people and gallery photos on this page. The banner, about banner and logo are files you save in <code>static/img/</code> as <code>hero.jpg</code>, <code>about.jpg</code> and <code>logo.png</code>. See <code>static/img/README.txt</code> for sizes.</p></div>
 <h2>Leadership and staff</h2>
 <form method="post" enctype="multipart/form-data" class="inline"><input type="hidden" name="kind" value="person">
 <input name="name" placeholder="Name" required><input name="role" placeholder="Role, e.g. Headmistress" required>

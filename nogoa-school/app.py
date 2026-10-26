@@ -8,7 +8,16 @@ from werkzeug.utils import secure_filename
 app = Flask(__name__)
 app.config.update(SECRET_KEY=os.environ.get("SECRET_KEY", "dev-change-me"),
                   MAX_CONTENT_LENGTH=5 * 1024 * 1024)
-SCHOOL = "Nogoa Private"
+# Default site text. The admin can override any of these from /admin/settings.
+DEFAULTS = dict(
+    school_name="Nogoa Private Nursery, Primary and Secondary Schools",
+    short_name="Nogoa Private",
+    headline="Where every child is known by name.",
+    intro="Nursery, primary and secondary education, with admissions, WAEC/NECO registration and alumni connections all online.",
+    about="Write your school's story, mission and values here from the admin settings page.",
+    admission_fee="NGN 5,000",
+    contact="",
+)
 UPLOADS = "uploads"
 ALLOWED = {"pdf", "png", "jpg", "jpeg"}
 PHOTOS = os.path.join(UPLOADS, "photos")  # public photos only; documents stay private
@@ -38,6 +47,7 @@ def init_db():
     CREATE TABLE IF NOT EXISTS applications(id INTEGER PRIMARY KEY, user_id INTEGER,
         child TEXT, dob TEXT, grade TEXT, doc TEXT,
         status TEXT DEFAULT 'Pending', paid INTEGER DEFAULT 0);
+    CREATE TABLE IF NOT EXISTS settings(k TEXT PRIMARY KEY, v TEXT);
     CREATE TABLE IF NOT EXISTS people(id INTEGER PRIMARY KEY, name TEXT, role TEXT, bio TEXT, photo TEXT);
     CREATE TABLE IF NOT EXISTS gallery(id INTEGER PRIMARY KEY, caption TEXT, photo TEXT);
     CREATE TABLE IF NOT EXISTS testimonials(id INTEGER PRIMARY KEY, name TEXT, text TEXT, approved INTEGER DEFAULT 0);
@@ -79,9 +89,14 @@ def media(name):
     return send_from_directory(PHOTOS, name)
 
 
+def site():
+    return {**DEFAULTS, **{r["k"]: r["v"] for r in q("SELECT k,v FROM settings")}}
+
+
 @app.context_processor
 def inject():
-    return dict(school=SCHOOL, role=session.get("role"), username=session.get("name"))
+    S = site()
+    return dict(s=S, school=S["school_name"], role=session.get("role"), username=session.get("name"))
 
 
 def login_required(role=None):
@@ -115,7 +130,7 @@ def admissions():
     steps = [("Create an account", "Register as a parent or guardian."),
              ("Fill the application", "Enter your child's details."),
              ("Upload documents", "Birth certificate and passport photo."),
-             ("Pay the fee", "Admission fee: NGN 5,000. The school confirms payment."),
+             ("Pay the fee", f"Admission fee: {site()['admission_fee']}. The school confirms payment."),
              ("Track your status", "Check progress from your dashboard.")]
     return render_template("admissions.html", steps=steps)
 
@@ -307,6 +322,30 @@ def admin_content():
         photos=q("SELECT * FROM gallery ORDER BY id DESC"),
         quotes=q("SELECT * FROM testimonials ORDER BY approved, id DESC"),
         exams=q("SELECT e.*, u.name AS parent FROM exams e JOIN users u ON u.id=e.user_id ORDER BY e.id DESC"))
+
+
+# ---------- admin: site text, hero/logo images, password ----------
+@app.route("/admin/settings", methods=["GET", "POST"])
+@login_required("admin")
+def admin_settings():
+    if request.method == "POST":
+        f = request.form
+        for k in DEFAULTS:
+            if k in f:
+                db().execute("INSERT OR REPLACE INTO settings VALUES(?,?)", (k, f[k].strip()))
+        for k in ("hero", "logo"):
+            n = save_image(request.files.get(k))
+            if n:
+                db().execute("INSERT OR REPLACE INTO settings VALUES(?,?)", (k, n))
+            if f.get("remove_" + k):
+                db().execute("DELETE FROM settings WHERE k=?", (k,))
+        if len(f.get("new_password", "")) >= 6:
+            db().execute("UPDATE users SET pw=? WHERE id=?",
+                         (generate_password_hash(f["new_password"]), session["uid"]))
+        db().commit()
+        flash("Saved.")
+        return redirect(url_for("admin_settings"))
+    return render_template("admin_settings.html")
 
 
 if __name__ == "__main__":

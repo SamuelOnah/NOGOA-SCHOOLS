@@ -5,7 +5,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;800&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head><body>
-<header><a class="logo" href="{{ url_for('home') }}">{{ school }}</a>
+<header><a class="logo" href="{{ url_for('home') }}">
+<!-- IMAGE: logo. Upload it in Admin > Site settings, or save a file as static/img/logo.png -->
+{% if s.logo %}<img class="logo-img" src="{{ url_for('media', name=s.logo) }}" alt="">{% else %}<img class="logo-img" src="{{ url_for('static', filename='img/logo.png') }}" alt="" onerror="this.remove()">{% endif %} {{ s.short_name }}</a>
 <nav>
 <a href="{{ url_for('home') }}">Home</a>
 <a href="{{ url_for('about') }}">About</a>

@@ -48,3 +48,9 @@ form.inline{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-botto
 fieldset{border:1px solid var(--line);border-radius:8px;margin-bottom:16px;columns:2 200px}
 label.check{display:block;font-weight:400;margin-bottom:6px}label.check input{display:inline;width:auto;margin:0 6px 0 0}
 textarea{display:block;width:100%;margin-top:6px;padding:10px;border:1px solid var(--line);border-radius:8px;font:inherit}
+/* IMAGES: hero.jpg (.hero above), about.jpg (.banner below), logo.png (base.html). See static/img/README.txt */
+.banner{height:260px;background:linear-gradient(135deg,rgba(44,62,80,.7),rgba(122,62,18,.7)),url('img/about.jpg') center/cover}
+.logo img{vertical-align:middle;margin-right:6px}
+code{background:#f7efe3;padding:1px 6px;border-radius:4px}
+.logo-img{height:40px;width:auto;vertical-align:middle;margin-right:8px}
+.about{white-space:pre-line}

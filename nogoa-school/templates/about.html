@@ -3,6 +3,7 @@
 {% block title %}About{% endblock %}
 {% block content %}
 <section class="page"><h1>About {{ school }}</h1>
-<p>Replace this paragraph with your school's story, mission, vision and core values.</p>
+<p class="about">{{ s.about }}</p>
+{% if s.contact %}<p><strong>Contact:</strong> {{ s.contact }}</p>{% endif %}
 <h2>Our people</h2><div class="grid people">{% for p in people %}{{ person(p) }}{% endfor %}</div></section>
 {% endblock %}

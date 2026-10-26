@@ -15,3 +15,30 @@
   margin: 0 auto 12px;
 }
 .person .avatar.ph{ font-size: 2.2rem; }
+
+
+
+/* Landscape hero: wide text, side-by-side buttons, shorter banner */
+.hero{display:block;min-height:0;padding:clamp(48px,14vh,140px) 6vw;background-position:center;background-size:cover}
+.hero h1{font-size:clamp(1.8rem,3.8vw,3.2rem);max-width:24em;line-height:1.15}
+.hero p{max-width:42em;font-size:1.05rem}
+.hero .btn{width:auto;display:inline-block;margin:6px 10px 6px 0}
+
+/* Smaller leadership and staff photos */
+.grid.people{
+  grid-template-columns: repeat(auto-fill, 180px);
+  gap: 28px;
+  justify-content: start;
+}
+.person{ text-align: center; }
+.person .avatar{
+  width: 150px;
+  height: 150px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center top;
+  margin: 0 auto 12px;
+}
+.person .avatar.ph{ font-size: 2.2rem; }
+summary{cursor:pointer;color:var(--brown);font-weight:500;margin:8px 0}

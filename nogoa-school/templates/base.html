@@ -10,6 +10,9 @@
 <a href="{{ url_for('home') }}">Home</a>
 <a href="{{ url_for('about') }}">About</a>
 <a href="{{ url_for('admissions') }}">Admissions</a>
+<a href="{{ url_for('gallery') }}">Gallery</a>
+<a href="{{ url_for('testimonials') }}">Testimonials</a>
+{% if role %}<a href="{{ url_for('exams') }}">WAEC/NECO</a><a href="{{ url_for('classmates') }}">Classmates</a>{% endif %}
 {% if role == 'admin' %}<a href="{{ url_for('admin') }}">Admin</a>
 {% elif role %}<a href="{{ url_for('dashboard') }}">Dashboard</a>{% endif %}
 {% if role %}<a class="btn ghost" href="{{ url_for('logout') }}">Log out</a>

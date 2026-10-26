@@ -1,4 +1,4 @@
-import os, sqlite3
+import os, sqlite3, uuid
 from functools import wraps
 from flask import (Flask, render_template, request, redirect, url_for,
                    session, flash, g, send_from_directory)
@@ -11,7 +11,9 @@ app.config.update(SECRET_KEY=os.environ.get("SECRET_KEY", "dev-change-me"),
 SCHOOL = "Nogoa Private"
 UPLOADS = "uploads"
 ALLOWED = {"pdf", "png", "jpg", "jpeg"}
-os.makedirs(UPLOADS, exist_ok=True)
+PHOTOS = os.path.join(UPLOADS, "photos")  # public photos only; documents stay private
+IMG = {"png", "jpg", "jpeg", "webp"}
+os.makedirs(PHOTOS, exist_ok=True)
 
 
 def db():
@@ -36,15 +38,45 @@ def init_db():
     CREATE TABLE IF NOT EXISTS applications(id INTEGER PRIMARY KEY, user_id INTEGER,
         child TEXT, dob TEXT, grade TEXT, doc TEXT,
         status TEXT DEFAULT 'Pending', paid INTEGER DEFAULT 0);
+    CREATE TABLE IF NOT EXISTS people(id INTEGER PRIMARY KEY, name TEXT, role TEXT, bio TEXT, photo TEXT);
+    CREATE TABLE IF NOT EXISTS gallery(id INTEGER PRIMARY KEY, caption TEXT, photo TEXT);
+    CREATE TABLE IF NOT EXISTS testimonials(id INTEGER PRIMARY KEY, name TEXT, text TEXT, approved INTEGER DEFAULT 0);
+    CREATE TABLE IF NOT EXISTS exams(id INTEGER PRIMARY KEY, user_id INTEGER, exam TEXT, candidate TEXT,
+        dob TEXT, subjects TEXT, status TEXT DEFAULT 'Submitted');
+    CREATE TABLE IF NOT EXISTS alumni(user_id INTEGER PRIMARY KEY, grad_year INTEGER, city TEXT,
+        bio TEXT, photo TEXT, visible INTEGER DEFAULT 1);
     """)
     if not c.execute("SELECT 1 FROM users WHERE role='admin'").fetchone():
         c.execute("INSERT INTO users(name,email,pw,role) VALUES(?,?,?,?)",
                   ("Admin", "admin@nogoa.school", generate_password_hash("admin123"), "admin"))
+    if not c.execute("SELECT 1 FROM people").fetchone():
+        c.executemany("INSERT INTO people(name,role,bio) VALUES(?,?,?)", [
+            ("Proprietor's Name", "Proprietor", "Replace this with a short welcome message from the proprietor."),
+            ("Headmistress's Name", "Headmistress", "Replace this with a short message from the headmistress.")])
+        c.execute("INSERT INTO testimonials(name,text,approved) VALUES(?,?,1)",
+                  ("Sample parent", "Replace this sample with a real testimonial from the admin page.",))
     c.commit()
     c.close()
 
 
 init_db()
+
+
+def q(sql, *a):
+    return db().execute(sql, a).fetchall()
+
+
+def save_image(f):
+    if f and f.filename and f.filename.rsplit(".", 1)[-1].lower() in IMG:
+        n = uuid.uuid4().hex[:10] + "_" + secure_filename(f.filename)
+        f.save(os.path.join(PHOTOS, n))
+        return n
+    return ""
+
+
+@app.route("/media/<name>")
+def media(name):
+    return send_from_directory(PHOTOS, name)
 
 
 @app.context_processor
@@ -68,12 +100,14 @@ def login_required(role=None):
 # ---------- public pages ----------
 @app.route("/")
 def home():
-    return render_template("index.html")
+    return render_template("index.html", people=q("SELECT * FROM people ORDER BY id LIMIT 4"),
+        quotes=q("SELECT * FROM testimonials WHERE approved=1 ORDER BY id DESC LIMIT 3"),
+        photos=q("SELECT * FROM gallery ORDER BY id DESC LIMIT 6"))
 
 
 @app.route("/about")
 def about():
-    return render_template("about.html")
+    return render_template("about.html", people=q("SELECT * FROM people ORDER BY id"))
 
 
 @app.route("/admissions")
@@ -177,6 +211,102 @@ def admin_update(app_id):
 @login_required("admin")
 def admin_file(name):
     return send_from_directory(UPLOADS, name)
+
+
+# ---------- gallery & testimonials ----------
+@app.route("/gallery")
+def gallery():
+    return render_template("gallery.html", photos=q("SELECT * FROM gallery ORDER BY id DESC"))
+
+
+@app.route("/testimonials", methods=["GET", "POST"])
+def testimonials():
+    if request.method == "POST":
+        if "uid" not in session:
+            return redirect(url_for("login"))
+        db().execute("INSERT INTO testimonials(name,text) VALUES(?,?)",
+                     (session["name"], request.form["text"].strip()[:500]))
+        db().commit()
+        flash("Thank you. Your testimonial will show once the school approves it.")
+        return redirect(url_for("testimonials"))
+    return render_template("testimonials.html",
+                           items=q("SELECT * FROM testimonials WHERE approved=1 ORDER BY id DESC"))
+
+
+# ---------- WAEC / NECO registration ----------
+SUBJECTS = ["English Language", "Mathematics", "Civic Education", "Biology", "Chemistry", "Physics",
+            "Economics", "Government", "Literature in English", "Commerce", "Financial Accounting",
+            "Geography", "Agricultural Science", "Further Mathematics"]
+
+
+@app.route("/exams", methods=["GET", "POST"])
+@login_required()
+def exams():
+    if request.method == "POST":
+        f = request.form
+        if f["exam"] in ("WAEC", "NECO") and f.getlist("subjects"):
+            db().execute("INSERT INTO exams(user_id,exam,candidate,dob,subjects) VALUES(?,?,?,?,?)",
+                         (session["uid"], f["exam"], f["candidate"].strip(), f["dob"],
+                          ", ".join(s for s in f.getlist("subjects") if s in SUBJECTS)))
+            db().commit()
+            flash("Registration submitted. The school will confirm it.")
+        else:
+            flash("Choose an exam and at least one subject.")
+        return redirect(url_for("exams"))
+    return render_template("exams.html", subjects=SUBJECTS,
+                           mine=q("SELECT * FROM exams WHERE user_id=? ORDER BY id DESC", session["uid"]))
+
+
+# ---------- classmates ----------
+@app.route("/classmates")
+@login_required()
+def classmates():
+    y, name = request.args.get("year", "").strip(), request.args.get("q", "").strip()
+    rows = q("""SELECT u.name, a.* FROM alumni a JOIN users u ON u.id=a.user_id
+                WHERE a.visible=1 AND (?='' OR a.grad_year=?) AND u.name LIKE ?
+                ORDER BY a.grad_year DESC, u.name""", y, y, f"%{name}%")
+    return render_template("classmates.html", rows=rows, year=y, name=name)
+
+
+@app.route("/profile", methods=["GET", "POST"])
+@login_required()
+def profile():
+    me = q("SELECT * FROM alumni WHERE user_id=?", session["uid"])
+    if request.method == "POST":
+        f = request.form
+        photo = save_image(request.files.get("photo")) or (me[0]["photo"] if me else "")
+        db().execute("INSERT OR REPLACE INTO alumni VALUES(?,?,?,?,?,?)",
+                     (session["uid"], int(f["grad_year"]), f["city"].strip(),
+                      f["bio"].strip()[:300], photo, 1 if f.get("visible") else 0))
+        db().commit()
+        flash("Profile saved.")
+        return redirect(url_for("classmates"))
+    return render_template("profile.html", me=me[0] if me else None)
+
+
+# ---------- admin: content ----------
+@app.route("/admin/content", methods=["GET", "POST"])
+@login_required("admin")
+def admin_content():
+    if request.method == "POST":
+        f, k = request.form, request.form["kind"]
+        if k == "person":
+            db().execute("INSERT INTO people(name,role,bio,photo) VALUES(?,?,?,?)",
+                         (f["name"], f["role"], f["bio"], save_image(request.files.get("photo"))))
+        elif k == "photo" and (p := save_image(request.files.get("photo"))):
+            db().execute("INSERT INTO gallery(caption,photo) VALUES(?,?)", (f["caption"], p))
+        elif k == "approve":
+            db().execute("UPDATE testimonials SET approved=1 WHERE id=?", (f["id"],))
+        elif k == "exam_status":
+            db().execute("UPDATE exams SET status=? WHERE id=?", (f["status"], f["id"]))
+        elif k == "delete" and f["table"] in ("people", "gallery", "testimonials"):
+            db().execute(f"DELETE FROM {f['table']} WHERE id=?", (f["id"],))
+        db().commit()
+        return redirect(url_for("admin_content"))
+    return render_template("admin_content.html", people=q("SELECT * FROM people ORDER BY id"),
+        photos=q("SELECT * FROM gallery ORDER BY id DESC"),
+        quotes=q("SELECT * FROM testimonials ORDER BY approved, id DESC"),
+        exams=q("SELECT e.*, u.name AS parent FROM exams e JOIN users u ON u.id=e.user_id ORDER BY e.id DESC"))
 
 
 if __name__ == "__main__":

@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% from "_macros.html" import photo %}
+{% block title %}Manage content{% endblock %}
+{% block content %}
+<section class="page wide"><h1>Manage site content</h1>
+<h2>Leadership and staff</h2>
+<form method="post" enctype="multipart/form-data" class="inline"><input type="hidden" name="kind" value="person">
+<input name="name" placeholder="Name" required><input name="role" placeholder="Role, e.g. Headmistress" required>
+<input name="bio" placeholder="Short message"><input type="file" name="photo" accept="image/*"><button class="btn small">Add person</button></form>
+<div class="grid people">{% for p in people %}<div class="person">{{ photo(p.name, p.photo) }}<h3>{{ p.name }}</h3><strong>{{ p.role }}</strong>
+<form method="post"><input type="hidden" name="kind" value="delete"><input type="hidden" name="table" value="people"><input type="hidden" name="id" value="{{ p.id }}"><button class="btn small ghost">Delete</button></form></div>{% endfor %}</div>
+<h2>Gallery photos</h2>
+<form method="post" enctype="multipart/form-data" class="inline"><input type="hidden" name="kind" value="photo">
+<input name="caption" placeholder="Caption" required><input type="file" name="photo" accept="image/*" required><button class="btn small">Add photo</button></form>
+<div class="masonry">{% for g in photos %}<figure><img src="{{ url_for('media', name=g.photo) }}" alt=""><figcaption>{{ g.caption }}
+<form method="post"><input type="hidden" name="kind" value="delete"><input type="hidden" name="table" value="gallery"><input type="hidden" name="id" value="{{ g.id }}"><button class="btn small ghost">Delete</button></form></figcaption></figure>{% endfor %}</div>
+<h2>Testimonials</h2>
+<table><tr><th>From</th><th>Text</th><th>Status</th><th></th></tr>{% for t in quotes %}<tr><td>{{ t.name }}</td><td>{{ t.text }}</td><td>{{ 'Live' if t.approved else 'Waiting' }}</td><td>
+{% if not t.approved %}<form method="post"><input type="hidden" name="kind" value="approve"><input type="hidden" name="id" value="{{ t.id }}"><button class="btn small">Approve</button></form>{% endif %}
+<form method="post"><input type="hidden" name="kind" value="delete"><input type="hidden" name="table" value="testimonials"><input type="hidden" name="id" value="{{ t.id }}"><button class="btn small ghost">Delete</button></form></td></tr>{% endfor %}</table>
+<h2>WAEC / NECO registrations</h2>
+<table><tr><th>Exam</th><th>Candidate</th><th>DOB</th><th>Subjects</th><th>Parent</th><th>Status</th></tr>{% for e in exams %}<tr><td>{{ e.exam }}</td><td>{{ e.candidate }}</td><td>{{ e.dob }}</td><td>{{ e.subjects }}</td><td>{{ e.parent }}</td><td>
+<form method="post" class="inline"><input type="hidden" name="kind" value="exam_status"><input type="hidden" name="id" value="{{ e.id }}"><select name="status">{% for s in ['Submitted','Confirmed','Fee paid','Rejected'] %}<option {{ 'selected' if s == e.status }}>{{ s }}</option>{% endfor %}</select><button class="btn small">Save</button></form></td></tr>{% endfor %}</table>
+</section>
+{% endblock %}

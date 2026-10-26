@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block title %}Gallery{% endblock %}
+{% block content %}
+<section class="page wide"><h1>Gallery</h1>
+{% if photos %}<div class="masonry">{% for g in photos %}<figure><img src="{{ url_for('media', name=g.photo) }}" alt="{{ g.caption }}"><figcaption>{{ g.caption }}</figcaption></figure>{% endfor %}</div>
+{% else %}<p>No photos yet. The admin can add them under Admin, then Manage photos.</p>{% endif %}</section>
+{% endblock %}

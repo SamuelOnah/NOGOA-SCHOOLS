@@ -30,3 +30,21 @@ th,td{padding:10px 12px;border-bottom:1px solid var(--line);text-align:left;vert
 .tag.accepted{background:#d8f0dc}.tag.rejected{background:#f6d6d6}.tag.under-review{background:#fbeccb}
 .flash{background:#fbeccb;padding:12px 6vw;border-bottom:1px solid var(--gold)}
 footer{padding:24px 6vw;border-top:1px solid var(--line);color:#6b5a4c;font-size:.9rem}
+.hero{min-height:70vh;display:flex;flex-direction:column;justify-content:center;background:linear-gradient(135deg,rgba(44,62,80,.88),rgba(122,62,18,.88)),url('img/hero.jpg') center/cover}
+.band{padding:64px 6vw}.band.alt{background:#f7efe3}.band h2,.page h2{font-family:Fraunces,serif;font-size:2rem;margin:0 0 24px}
+.band.cta{text-align:center;background:var(--brown);color:#fff}.band.cta .btn{background:var(--gold);border-color:var(--gold);color:var(--ink)}
+.band .grid{padding:0}.grid.people{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.person .avatar{margin-bottom:12px}.person p{color:#5b4a3c}
+.avatar{display:block;width:100%;aspect-ratio:4/5;object-fit:cover;border-radius:6px}
+.avatar.round{width:72px;height:72px;aspect-ratio:1;border-radius:50%;flex:none}
+.ph{display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--gold),var(--brown));color:#fff;font:800 2.5rem Fraunces,serif}
+.avatar.round.ph{font-size:1.6rem}
+.quote{margin:0;padding:20px 24px;border-left:4px solid var(--gold);background:#fff}
+.quote p{font:600 1.1rem/1.5 Fraunces,serif;margin:0 0 12px}.quote footer{color:#6b5a4c;font-size:.9rem}
+.masonry{columns:3 240px;column-gap:16px}.masonry figure{margin:0 0 16px;break-inside:avoid}
+.masonry img{width:100%;display:block;border-radius:6px}.masonry figcaption{font-size:.9rem;color:#5b4a3c;padding:6px 2px}
+.mate{display:flex;gap:16px;align-items:flex-start}.mate h3{margin:0}
+form.inline{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:24px}form.inline input,form.inline select{width:auto;margin:0}
+fieldset{border:1px solid var(--line);border-radius:8px;margin-bottom:16px;columns:2 200px}
+label.check{display:block;font-weight:400;margin-bottom:6px}label.check input{display:inline;width:auto;margin:0 6px 0 0}
+textarea{display:block;width:100%;margin-top:6px;padding:10px;border:1px solid var(--line);border-radius:8px;font:inherit}

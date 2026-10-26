@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% from "_macros.html" import quote %}
+{% block title %}Testimonials{% endblock %}
+{% block content %}
+<section class="page"><h1>Testimonials</h1>
+<div class="grid">{% for i in items %}{{ quote(i) }}{% else %}<p>No testimonials yet.</p>{% endfor %}</div>
+<h2>Share yours</h2>
+{% if role %}<form method="post"><label>Your testimonial (max 500 characters)<textarea name="text" rows="4" maxlength="500" required></textarea></label><button class="btn">Send testimonial</button></form>
+{% else %}<p><a href="{{ url_for('login') }}">Log in</a> to share your experience.</p>{% endif %}</section>
+{% endblock %}

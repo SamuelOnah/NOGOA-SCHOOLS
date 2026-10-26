@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}WAEC / NECO{% endblock %}
+{% block content %}
+<section class="page"><h1>WAEC and NECO registration</h1>
+<form method="post">
+<label>Examination<select name="exam"><option>WAEC</option><option>NECO</option></select></label>
+<label>Candidate's full name (as on the birth certificate)<input name="candidate" required></label>
+<label>Date of birth<input type="date" name="dob" required></label>
+<fieldset><legend>Subjects</legend>{% for s in subjects %}<label class="check"><input type="checkbox" name="subjects" value="{{ s }}"> {{ s }}</label>{% endfor %}</fieldset>
+<button class="btn">Submit registration</button></form>
+<h2>Your registrations</h2>
+{% if mine %}<table><tr><th>Exam</th><th>Candidate</th><th>Subjects</th><th>Status</th></tr>
+{% for m in mine %}<tr><td>{{ m.exam }}</td><td>{{ m.candidate }}</td><td>{{ m.subjects }}</td><td><span class="tag">{{ m.status }}</span></td></tr>{% endfor %}</table>
+{% else %}<p>You have not registered anyone yet.</p>{% endif %}</section>
+{% endblock %}

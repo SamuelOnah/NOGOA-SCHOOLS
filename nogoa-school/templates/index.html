@@ -1,14 +1,26 @@
 {% extends "base.html" %}
+{% from "_macros.html" import photo, quote, person %}
 {% block content %}
 <section class="hero">
 <h1>Where every child is known by name.</h1>
-<p>{{ school }} offers nursery, primary and secondary education, with admissions handled fully online.</p>
+<p>{{ school }} offers nursery, primary and secondary education, with admissions, WAEC/NECO registration and alumni connections all online.</p>
 <a class="btn" href="{{ url_for('admissions') }}">Start admission</a>
 <a class="btn ghost" href="{{ url_for('about') }}">About the school</a>
 </section>
-<section class="grid">
-<div class="card"><h3>Nursery</h3><p>Play-led learning for the youngest pupils.</p></div>
-<div class="card"><h3>Primary</h3><p>Strong foundations in literacy, numeracy and character.</p></div>
-<div class="card"><h3>Secondary</h3><p>Exam preparation and guidance for the next step.</p></div>
-</section>
+<section class="band"><h2>Our school</h2>
+<div class="grid">
+<div class="card"><h3>Nursery</h3><p>Play-led learning, phonics and early numbers in a safe, caring setting.</p></div>
+<div class="card"><h3>Primary</h3><p>Strong foundations in literacy, numeracy, science and character.</p></div>
+<div class="card"><h3>Secondary</h3><p>Full preparation for WAEC and NECO, with guidance for what comes next.</p></div>
+</div></section>
+<section class="band alt"><h2>Meet our leadership</h2>
+<div class="grid people">{% for p in people %}{{ person(p) }}{% endfor %}</div></section>
+<section class="band"><h2>What parents and students say</h2>
+<div class="grid">{% for i in quotes %}{{ quote(i) }}{% endfor %}</div>
+<p><a href="{{ url_for('testimonials') }}">Read more or share yours</a></p></section>
+<section class="band alt"><h2>Life at {{ school }}</h2>
+{% if photos %}<div class="masonry">{% for g in photos %}<figure><img src="{{ url_for('media', name=g.photo) }}" alt="{{ g.caption }}"><figcaption>{{ g.caption }}</figcaption></figure>{% endfor %}</div>
+<p><a href="{{ url_for('gallery') }}">See the full gallery</a></p>
+{% else %}<p>Photos will appear here once the school adds them from the admin page.</p>{% endif %}</section>
+<section class="band cta"><h2>Join our school family</h2><a class="btn" href="{{ url_for('register') }}">Create an account</a></section>
 {% endblock %}

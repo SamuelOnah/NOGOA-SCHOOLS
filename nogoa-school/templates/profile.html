@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}My profile{% endblock %}
+{% block content %}
+<section class="page narrow"><h1>My alumni profile</h1>
+<form method="post" enctype="multipart/form-data">
+<label>Year you finished (or will finish)<input type="number" name="grad_year" min="1980" max="2040" value="{{ me.grad_year if me }}" required></label>
+<label>City<input name="city" value="{{ me.city if me }}"></label>
+<label>About you (max 300 characters)<textarea name="bio" rows="3" maxlength="300">{{ me.bio if me }}</textarea></label>
+<label>Photo (PNG, JPG or WEBP)<input type="file" name="photo" accept="image/*"></label>
+<label class="check"><input type="checkbox" name="visible" {{ 'checked' if not me or me.visible }}> Show my profile to other logged-in members</label>
+<button class="btn">Save profile</button></form></section>
+{% endblock %}

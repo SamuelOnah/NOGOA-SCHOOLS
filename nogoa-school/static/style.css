@@ -1,22 +1,61 @@
-/* Smaller leadership and staff photos */
-.grid.people{
-  grid-template-columns: repeat(auto-fill, 180px);
-  gap: 28px;
-  justify-content: start;
-}
-.person{ text-align: center; }
-.person .avatar{
-  width: 150px;
-  height: 150px;
-  aspect-ratio: 1;
-  border-radius: 50%;
-  object-fit: cover;
-  object-position: center top;   /* keeps faces in frame */
-  margin: 0 auto 12px;
-}
-.person .avatar.ph{ font-size: 2.2rem; }
+:root{--brown:#7a3e12;--gold:#d4a017;--ink:#2a1a10;--paper:#fffdf9;--line:#e8dccb}
+*{box-sizing:border-box}
+body{margin:0;font-family:Poppins,sans-serif;color:var(--ink);background:var(--paper);line-height:1.6}
+h1,h3,.logo{font-family:Fraunces,serif}
+a{color:var(--brown)}
+header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;padding:16px 6vw;border-bottom:1px solid var(--line)}
+.logo{font-size:1.5rem;font-weight:800;text-decoration:none}
+nav{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+nav a{text-decoration:none;font-weight:500}
+.btn{display:inline-block;background:var(--brown);color:#fff;border:2px solid var(--brown);padding:10px 20px;border-radius:999px;font:500 1rem Poppins,sans-serif;cursor:pointer;text-decoration:none}
+.btn.ghost{background:transparent;color:var(--brown)}
+.btn.small{padding:4px 14px;font-size:.85rem}
+.btn:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.hero{padding:12vh 6vw;background:linear-gradient(135deg,#2c3e50,var(--brown));color:#fff}
+.hero h1{font-size:clamp(2.2rem,6vw,4rem);max-width:14em;margin:0 0 .4em;line-height:1.1}
+.hero p{max-width:34em;font-size:1.1rem}
+.hero .btn{background:var(--gold);border-color:var(--gold);color:var(--ink);margin-right:10px}
+.hero .btn.ghost{background:transparent;color:#fff;border-color:#fff}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:24px;padding:48px 6vw}
+.card{border-left:4px solid var(--gold);padding:8px 20px}
+.page{padding:48px 6vw;max-width:900px;margin:auto}
+.page.wide{max-width:1200px}.page.narrow{max-width:480px}
+form label{display:block;margin-bottom:16px;font-weight:500}
+input,select{display:block;width:100%;margin-top:6px;padding:10px;border:1px solid var(--line);border-radius:8px;font:inherit}
+td input,td select{margin:0}
+.steps{padding-left:1.2em}.steps li{margin-bottom:14px}.steps span{display:block;color:#6b5a4c}
+table{width:100%;border-collapse:collapse;margin-top:24px;overflow-x:auto;display:block}
+th,td{padding:10px 12px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+.tag{padding:2px 12px;border-radius:999px;background:#eee;font-size:.85rem}
+.tag.accepted{background:#d8f0dc}.tag.rejected{background:#f6d6d6}.tag.under-review{background:#fbeccb}
+.flash{background:#fbeccb;padding:12px 6vw;border-bottom:1px solid var(--gold)}
+footer{padding:24px 6vw;border-top:1px solid var(--line);color:#6b5a4c;font-size:.9rem}
+.hero{min-height:70vh;display:flex;flex-direction:column;justify-content:center;background:linear-gradient(135deg,rgba(44,62,80,.88),rgba(122,62,18,.88)),url('img/hero.jpg') center/cover}
+.band{padding:64px 6vw}.band.alt{background:#f7efe3}.band h2,.page h2{font-family:Fraunces,serif;font-size:2rem;margin:0 0 24px}
+.band.cta{text-align:center;background:var(--brown);color:#fff}.band.cta .btn{background:var(--gold);border-color:var(--gold);color:var(--ink)}
+.band .grid{padding:0}.grid.people{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.person .avatar{margin-bottom:12px}.person p{color:#5b4a3c}
+.avatar{display:block;width:100%;aspect-ratio:4/5;object-fit:cover;border-radius:6px}
+.avatar.round{width:72px;height:72px;aspect-ratio:1;border-radius:50%;flex:none}
+.ph{display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--gold),var(--brown));color:#fff;font:800 2.5rem Fraunces,serif}
+.avatar.round.ph{font-size:1.6rem}
+.quote{margin:0;padding:20px 24px;border-left:4px solid var(--gold);background:#fff}
+.quote p{font:600 1.1rem/1.5 Fraunces,serif;margin:0 0 12px}.quote footer{color:#6b5a4c;font-size:.9rem}
+.masonry{columns:3 240px;column-gap:16px}.masonry figure{margin:0 0 16px;break-inside:avoid}
+.masonry img{width:100%;display:block;border-radius:6px}.masonry figcaption{font-size:.9rem;color:#5b4a3c;padding:6px 2px}
+.mate{display:flex;gap:16px;align-items:flex-start}.mate h3{margin:0}
+form.inline{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:24px}form.inline input,form.inline select{width:auto;margin:0}
+fieldset{border:1px solid var(--line);border-radius:8px;margin-bottom:16px;columns:2 200px}
+label.check{display:block;font-weight:400;margin-bottom:6px}label.check input{display:inline;width:auto;margin:0 6px 0 0}
+textarea{display:block;width:100%;margin-top:6px;padding:10px;border:1px solid var(--line);border-radius:8px;font:inherit}
+/* IMAGES: hero.jpg (.hero above), about.jpg (.banner below), logo.png (base.html). See static/img/README.txt */
+.banner{height:260px;background:linear-gradient(135deg,rgba(44,62,80,.7),rgba(122,62,18,.7)),url('img/about.jpg') center/cover}
+.logo img{vertical-align:middle;margin-right:6px}
+code{background:#f7efe3;padding:1px 6px;border-radius:4px}
+.logo-img{height:40px;width:auto;vertical-align:middle;margin-right:8px}
+.about{white-space:pre-line}
 
-
+/* ===== Your requested changes (keep these at the bottom) ===== */
 
 /* Landscape hero: wide text, side-by-side buttons, shorter banner */
 .hero{display:block;min-height:0;padding:clamp(48px,14vh,140px) 6vw;background-position:center;background-size:cover}
@@ -24,23 +63,9 @@
 .hero p{max-width:42em;font-size:1.05rem}
 .hero .btn{width:auto;display:inline-block;margin:6px 10px 6px 0}
 
-/* Smaller leadership and staff photos */
-.grid.people{
-  grid-template-columns: repeat(auto-fill, 180px);
-  gap: 28px;
-  justify-content: start;
-}
-.person{ text-align: center; }
-.person .avatar{
-  width: 150px;
-  height: 150px;
-  aspect-ratio: 1;
-  border-radius: 50%;
-  object-fit: cover;
-  object-position: center top;
-  margin: 0 auto 12px;
-}
-.person .avatar.ph{ font-size: 2.2rem; }
+/* Leadership and staff photos: smaller, rectangular, slightly rounded corners */
+.grid.people{grid-template-columns:repeat(auto-fill,180px);gap:28px;justify-content:start}
+.person{text-align:center}
+.person .avatar{width:150px;height:188px;aspect-ratio:auto;border-radius:3px;object-fit:cover;object-position:center top;margin:0 auto 12px}
+.person .avatar.ph{font-size:2.2rem}
 summary{cursor:pointer;color:var(--brown);font-weight:500;margin:8px 0}
-
-.person .avatar{width:150px;height:188px;aspect-ratio:auto;border-radius:3px;object-fit:cover;object-position:center top;margin:0 0 12px}

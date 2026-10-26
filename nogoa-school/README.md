@@ -18,3 +18,4 @@ Each user row has a `role` column. At login the app copies it into the signed se
 and `@login_required("admin")` in app.py checks it on every admin page.
 To make another person admin (they must register first), run in the project folder:
     python -c "import sqlite3; c=sqlite3.connect('school.db'); c.execute(\"UPDATE users SET role='admin' WHERE email='THEIR@EMAIL'\"); c.commit()"
+

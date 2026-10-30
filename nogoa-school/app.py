@@ -24,7 +24,6 @@ PHOTOS = os.path.join(UPLOADS, "photos")  # public photos only; documents stay p
 IMG = {"png", "jpg", "jpeg", "webp"}
 os.makedirs(PHOTOS, exist_ok=True)
 
-generate_password_hash(os.environ.get("ADMIN_PASSWORD", "admin123"))
 
 def db():
     if "db" not in g:
@@ -59,7 +58,7 @@ def init_db():
     """)
     if not c.execute("SELECT 1 FROM users WHERE role='admin'").fetchone():
         c.execute("INSERT INTO users(name,email,pw,role) VALUES(?,?,?,?)",
-                  ("Admin", "admin@nogoa.school", generate_password_hash("admin123"), "admin"))
+                  ("Admin", "admin@nogoa.school", generate_password_hash(os.environ.get("ADMIN_PASSWORD", "admin123")), "admin"))
     if not c.execute("SELECT 1 FROM people").fetchone():
         c.executemany("INSERT INTO people(name,role,bio) VALUES(?,?,?)", [
             ("Proprietor's Name", "Proprietor", "Replace this with a short welcome message from the proprietor."),
@@ -311,6 +310,10 @@ def admin_content():
                          (f["name"], f["role"], f["bio"], save_image(request.files.get("photo"))))
         elif k == "photo" and (p := save_image(request.files.get("photo"))):
             db().execute("INSERT INTO gallery(caption,photo) VALUES(?,?)", (f["caption"], p))
+        elif k == "person_edit":
+            p = save_image(request.files.get("photo"))  # empty string if no new photo was chosen
+            db().execute("UPDATE people SET name=?, role=?, bio=?, photo=CASE WHEN ?<>'' THEN ? ELSE photo END WHERE id=?",
+                         (f["name"], f["role"], f["bio"], p, p, f["id"]))
         elif k == "approve":
             db().execute("UPDATE testimonials SET approved=1 WHERE id=?", (f["id"],))
         elif k == "exam_status":

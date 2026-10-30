@@ -24,6 +24,7 @@ PHOTOS = os.path.join(UPLOADS, "photos")  # public photos only; documents stay p
 IMG = {"png", "jpg", "jpeg", "webp"}
 os.makedirs(PHOTOS, exist_ok=True)
 
+generate_password_hash(os.environ.get("ADMIN_PASSWORD", "admin123"))
 
 def db():
     if "db" not in g:
